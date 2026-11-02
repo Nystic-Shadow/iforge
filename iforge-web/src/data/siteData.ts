@@ -44,6 +44,9 @@ export const siteConfig = {
   extraPhones: [] as string[],
 };
 
+/** The live site's address, for links in emails. */
+export const SITE_URL = "https://www.iforge.in";
+
 /** Most numbers or addresses shown for each: the main one plus two extras. */
 export const MAX_CONTACTS = 3;
 

@@ -73,18 +73,29 @@ and press **Send reply** (see Email below).
 
 ### Email
 
-With `RESEND_API_KEY` and `EMAIL_FROM` set:
+Mail is sent over SMTP from your own mailbox — Google Workspace/Gmail,
+Microsoft 365, Zoho, or any domain mail host. Set it up in **Admin → Email**
+(no environment variables or redeploy needed):
 
-- Whoever sends an enquiry gets an automatic confirmation with their ticket
-  number and a copy of what they sent.
-- Each enquiry in the Inbox gets a **Send reply** button. It saves the reply
-  text and emails it to the customer after you confirm. Customers' answers go
-  to the contact email in `siteData.ts`.
-- Every email sent, or failed, shows in the enquiry's Activity.
+- **Mail provider:** pick a preset or enter the SMTP server, port, security,
+  username and password. Google needs an **App Password**; Microsoft 365 needs
+  "Authenticated SMTP" turned on for the mailbox.
+- **Sender:** the From name and address (usually the mailbox itself).
+  Customers' replies come back to it.
+- **Send new enquiries to:** up to 5 addresses. Each gets every contact-form
+  and quote request; replying to that email answers the customer.
+- **Confirmation:** optionally send the customer an automatic "we got it"
+  email with their ticket number.
+- **Send test email** checks the saved settings and shows the server's error
+  if something's wrong.
 
-Setup: create a free account at resend.com, add `iforge.in` under **Domains**
-and add the DNS records it shows, create an API key, then set both variables
-on your host and redeploy.
+Each enquiry in the Inbox also gets a **Send reply** button that emails the
+reply after you confirm. Every email sent, or failed, shows in the enquiry's
+Activity.
+
+The settings live in the private `app_settings` table (only the server can
+read it; the password is never sent back to the browser). Run the latest
+`supabase/schema.sql` once to create it.
 
 ### Files
 

@@ -27,7 +27,7 @@ interface InboxContextValue {
   lastChecked: string | null;
   notifyPermission: NotificationPermission | "unsupported";
   enableNotifications: () => void;
-  /** Resend is configured, so replies can be emailed. */
+  /** A mailbox is set up in Admin → Email, so replies can be emailed. */
   emailEnabled: boolean;
 }
 
@@ -63,6 +63,7 @@ const NAV = [
   { href: "/admin", label: "Inbox", key: "inbox" },
   { href: "/admin/team", label: "Team", key: "team" },
   { href: "/admin/content", label: "Content", key: "content" },
+  { href: "/admin/email", label: "Email", key: "email" },
 ];
 
 export default function AdminShell({

@@ -100,7 +100,7 @@ export default async function PrivacyPage() {
               <ul>
                 <li>our website hosting provider;</li>
                 <li>our database provider, which stores enquiries;</li>
-                <li>our email delivery provider, which sends confirmation emails and our replies;</li>
+                <li>our email provider, which delivers your enquiry to our team, your confirmation email and our replies;</li>
                 <li>the AI model provider used by our enquiry assistant.</li>
               </ul>
               <p>We may also disclose information where required by law.</p>
