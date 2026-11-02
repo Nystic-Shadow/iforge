@@ -1,17 +1,11 @@
 import { isAuthenticated } from "@/lib/auth";
 import { getInquiry, updateInquiry } from "@/lib/inquiries";
-import { isEmailConfigured, sendReply } from "@/lib/email";
+import { sendReply } from "@/lib/email";
 
 // Admin: save the reply shown in the inbox, then email it to the customer.
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   if (!(await isAuthenticated())) {
     return Response.json({ ok: false, error: "Unauthorized" }, { status: 401 });
-  }
-  if (!isEmailConfigured) {
-    return Response.json(
-      { ok: false, error: "Email isn't set up — add RESEND_API_KEY and EMAIL_FROM." },
-      { status: 503 },
-    );
   }
   const { id } = await params;
   const body = (await request.json().catch(() => null)) as { reply?: unknown } | null;

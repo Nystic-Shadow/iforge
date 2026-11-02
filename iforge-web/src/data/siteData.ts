@@ -32,6 +32,7 @@ export interface ServiceItem {
 
 export const siteConfig = {
   name: "iForge Technologies",
+  url: "https://www.iforge.in",
   tagline: "IT Services & Consulting",
   headline: "Accelerating Success With IT Services",
   subheadline: "Transform your business with cutting-edge technology and expert consultancy services tailored to your needs.",

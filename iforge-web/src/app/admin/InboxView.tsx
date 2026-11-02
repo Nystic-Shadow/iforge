@@ -375,7 +375,13 @@ function InquiryDetail({ inquiry, onSaved }: { inquiry: Inquiry; onSaved: (i: In
             {error && <div className="text-[#E61E32]">{error}</div>}
             {lastEmailed && <div className="text-muted-foreground">Reply last emailed {when(lastEmailed.at)}</div>}
             {!emailEnabled && (
-              <div className="text-muted-foreground">Email is off — add RESEND_API_KEY and EMAIL_FROM to send replies.</div>
+              <div className="text-muted-foreground">
+                Email is off —{" "}
+                <a href="/admin/email" className="underline hover:text-foreground">
+                  set up your mailbox
+                </a>{" "}
+                to send replies.
+              </div>
             )}
           </div>
           {confirming ? (
@@ -467,6 +473,8 @@ function describe(type: string): string {
       return "sent it to Hermes";
     case "webhook.failed":
       return "couldn't reach Hermes";
+    case "email.notify":
+      return "emailed it to the team";
     case "email.confirmation":
       return "sent the confirmation email";
     case "email.reply":

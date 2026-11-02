@@ -46,6 +46,19 @@ create index if not exists inquiries_status_idx on public.inquiries (status);
 alter table public.inquiries enable row level security;
 
 -- ─────────────────────────────────────────────────────────────
+-- Private settings from the admin panel (e.g. the outgoing mail server and
+-- its password). RLS on with no policies: only the server's service-role key
+-- can read or write it — never the public anon key.
+-- ─────────────────────────────────────────────────────────────
+create table if not exists public.app_settings (
+  id text primary key,
+  data jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.app_settings enable row level security;
+
+-- ─────────────────────────────────────────────────────────────
 -- Public "media" bucket for team photos uploaded from the admin panel.
 -- Anyone can view the images; only the server (service role) uploads.
 -- ─────────────────────────────────────────────────────────────
