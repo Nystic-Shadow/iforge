@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
-import { getContent, saveContent, type TeamMember, type TeamPageContent } from "@/lib/content";
+import { loadContent, saveContent, type TeamMember, type TeamPageContent } from "@/lib/content";
 
 const s = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
 
@@ -25,10 +25,19 @@ export async function PUT(request: Request) {
       linkedin: s(m.linkedin, 300) || undefined,
       github: s(m.github, 300) || undefined,
       x: s(m.x, 300) || undefined,
+      featured: m.featured === true || undefined,
     }))
     .filter((m) => m.name);
 
-  const content = await getContent();
+  // The rest of the document is saved back as read, so a failed read must
+  // not be saved over the real content as defaults.
+  const { content, error } = await loadContent();
+  if (error) {
+    return Response.json(
+      { ok: false, error: `Couldn't read the saved content (${error}), so nothing was saved.` },
+      { status: 503 },
+    );
+  }
 
   let teamPage: TeamPageContent = content.teamPage;
   const p = body.teamPage as Record<string, unknown> | undefined;

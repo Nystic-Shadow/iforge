@@ -1,6 +1,7 @@
 import "server-only";
 import nodemailer from "nodemailer";
-import { siteConfig } from "@/data/siteData";
+import { SITE_URL } from "@/data/siteData";
+import { getContent } from "@/lib/content";
 import { logEvent, type Inquiry } from "@/lib/inquiries";
 import { getMailSettings, isMailReady, type MailSettings } from "@/lib/settings";
 
@@ -10,6 +11,7 @@ import { getMailSettings, isMailReady, type MailSettings } from "@/lib/settings"
  *  - a copy of each new enquiry to up to 5 team addresses,
  *  - an optional confirmation to the person who sent it,
  *  - the reply you approve in the inbox.
+ * The company name comes from the admin-edited site content.
  */
 
 const escapeHtml = (s: string) =>
@@ -23,6 +25,8 @@ function toHtml(text: string): string {
     .join("");
   return `<div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.55;color:#111;max-width:600px">${paras}</div>`;
 }
+
+const companyName = async () => (await getContent()).siteConfig.name;
 
 interface Message {
   to: string | string[];
@@ -43,7 +47,7 @@ async function send(s: MailSettings, msg: Message): Promise<void> {
   });
   try {
     await transport.sendMail({
-      from: { name: s.fromName || siteConfig.name, address: s.fromEmail },
+      from: { name: s.fromName || (await companyName()), address: s.fromEmail },
       to: msg.to,
       replyTo: msg.replyTo,
       subject: msg.subject,
@@ -92,6 +96,7 @@ function detailLines(inq: Inquiry): string {
 export async function emailNewInquiry(inq: Inquiry): Promise<void> {
   const s = await readySettings();
   if (!s) return;
+  const name = await companyName().catch(() => "");
 
   if (s.recipients.length) {
     const contact = [
@@ -107,7 +112,7 @@ export async function emailNewInquiry(inq: Inquiry): Promise<void> {
       contact,
       detailLines(inq),
       inq.message ? `Message:\n${inq.message}` : "",
-      `Open in the inbox: ${siteConfig.url}/admin?open=${inq.id}`,
+      `Open in the inbox: ${SITE_URL}/admin?open=${inq.id}`,
       "Reply to this email to answer the customer directly.",
     ]
       .filter(Boolean)
@@ -128,13 +133,13 @@ export async function emailNewInquiry(inq: Inquiry): Promise<void> {
   if (s.confirmToCustomer) {
     const text = [
       `Hi ${firstName(inq.name)},`,
-      `Thanks for contacting ${siteConfig.name}. We've received your ${
+      `Thanks for contacting ${name || "us"}. We've received your ${
         inq.source === "quote" ? "project estimate request" : "message"
       } — your reference is ${inq.ticket}.`,
       "A member of our team will reply to you personally. If you need to add anything, just reply to this email.",
       detailLines(inq),
       inq.message ? `Your message:\n${inq.message}` : "",
-      `— ${siteConfig.name}`,
+      name ? `— ${name}` : "",
     ]
       .filter(Boolean)
       .join("\n\n");
@@ -154,7 +159,7 @@ export async function sendReply(inq: Inquiry): Promise<void> {
   const s = await readySettings();
   if (!s) throw new Error("Email isn't set up — add your mailbox in Admin → Email.");
   try {
-    await send(s, { to: inq.email, subject: `Re: your enquiry (${inq.ticket}) — ${siteConfig.name}`, text: reply });
+    await send(s, { to: inq.email, subject: `Re: your enquiry (${inq.ticket}) — ${await companyName()}`, text: reply });
   } catch (e) {
     await logEvent(inq.id, "email.failed", `reply: ${reason(e)}`);
     throw new Error(reason(e));
@@ -169,7 +174,7 @@ export async function sendTestEmail(): Promise<string[]> {
   const to = s.recipients.length ? s.recipients : [s.fromEmail];
   await send(s, {
     to,
-    subject: `Test email from the ${siteConfig.name} website`,
+    subject: `Test email from the ${await companyName()} website`,
     text: `This is a test from your website's admin panel.\n\nIf you're reading this, new enquiries will be emailed to: ${
       s.recipients.join(", ") || "(no team addresses added yet)"
     }.`,

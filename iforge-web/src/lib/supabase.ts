@@ -8,6 +8,9 @@ const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 export const isSupabaseConfigured = Boolean(url && anonKey);
 
+/** Without the service-role key, writes go through the anon key and RLS refuses them. */
+export const hasServiceRoleKey = Boolean(serviceKey);
+
 /** Public (read) client — safe for reading published content. */
 export function getSupabase(): SupabaseClient | null {
   if (!url || !anonKey) return null;
@@ -20,10 +23,9 @@ export function getSupabase(): SupabaseClient | null {
  * is set (writes will then depend on RLS policies).
  */
 export function getSupabaseAdmin(): SupabaseClient | null {
-  if (!url) return null;
-  const key = serviceKey || anonKey;
-  if (!key) return null;
-  return createClient(url, key, { auth: { persistSession: false } });
+  // Same condition as reads, so writes never land somewhere reads don't look.
+  if (!url || !anonKey) return null;
+  return createClient(url, serviceKey || anonKey, { auth: { persistSession: false } });
 }
 
 // The single row that holds the whole editable site document.

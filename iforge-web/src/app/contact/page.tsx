@@ -1,27 +1,25 @@
 import React from "react";
 import type { Metadata } from "next";
 import ContactForm from "@/components/ContactForm";
-import { siteConfig } from "@/data/siteData";
+import { getContent } from "@/lib/content";
+import { allEmails, allPhones, telHref } from "@/data/siteData";
 import { Reveal } from "@/components/ui/reveal";
 import { ArrowUpRight } from "reicon-react";
 
 export const metadata: Metadata = {
-  title: `Contact Us | ${siteConfig.name}`,
+  title: "Contact Us",
   description:
     "Talk to iForge's architects and engineers about your enterprise IT, cloud, AI and security projects.",
 };
 
-const CHANNELS = [
-  { label: "Email", value: siteConfig.contactEmail, href: `mailto:${siteConfig.contactEmail}` },
-  {
-    label: "Phone",
-    value: siteConfig.phone,
-    href: `tel:${siteConfig.phone.replace(/[^0-9+]/g, "")}`,
-  },
-  { label: "Studio", value: "Noida, India — serving global clients", href: null },
-];
+export default async function ContactPage() {
+  const { siteConfig } = await getContent();
+  const CHANNELS = [
+    { label: "Email", items: allEmails(siteConfig).map((e) => ({ value: e, href: `mailto:${e}` })) },
+    { label: "Phone", items: allPhones(siteConfig).map((p) => ({ value: p, href: telHref(p) })) },
+    { label: "Studio", items: [{ value: "Noida, India — serving global clients", href: null }] },
+  ].filter((c) => c.items.length > 0);
 
-export default function ContactPage() {
   return (
     <div className="w-full bg-background">
       <section className="border-b border-hairline">
@@ -45,22 +43,25 @@ export default function ContactPage() {
                 {CHANNELS.map((c) => (
                   <div
                     key={c.label}
-                    className="grid grid-cols-[120px_1fr] items-baseline gap-4 border-b border-hairline py-5"
+                    className="grid grid-cols-[88px_1fr] items-baseline gap-3 border-b border-hairline py-4"
                   >
                     <dt className="font-mono text-[0.7rem] uppercase tracking-wider text-muted-foreground">
                       {c.label}
                     </dt>
-                    <dd className="text-sm font-medium text-foreground">
-                      {c.href ? (
-                        <a
-                          href={c.href}
-                          className="inline-flex items-center gap-1 hover:text-[#E61E32]"
-                        >
-                          {c.value}
-                          <ArrowUpRight className="h-3.5 w-3.5" />
-                        </a>
-                      ) : (
-                        c.value
+                    <dd className="flex flex-col items-start gap-1.5 text-sm font-medium text-foreground">
+                      {c.items.map((item, i) =>
+                        item.href ? (
+                          <a
+                            key={i}
+                            href={item.href}
+                            className="inline-flex items-center gap-1 hover:text-[#E61E32]"
+                          >
+                            {item.value}
+                            <ArrowUpRight className="h-3.5 w-3.5" />
+                          </a>
+                        ) : (
+                          <span key={i}>{item.value}</span>
+                        ),
                       )}
                     </dd>
                   </div>

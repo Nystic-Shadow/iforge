@@ -21,9 +21,16 @@ const SKY: Partial<NebulaParams> = {
   seed: 7,
 };
 
-const PRACTICES = ["AI & ML", "Cloud", "Infrastructure", "Cybersecurity", "App Development"];
+// Short labels for the practice strip; other services show their full title.
+const SHORT_LABELS: Record<string, string> = {
+  "ai-ml": "AI & ML",
+  "it-cloud": "Cloud & IT",
+  "cybersecurity-services": "Cybersecurity",
+  "application-development": "App Development",
+};
 
-export default function NebulaHero() {
+export default function NebulaHero({ services }: { services: { slug: string; title: string }[] }) {
+  const practices = services.map((s) => SHORT_LABELS[s.slug] ?? s.title);
   return (
     <HalftoneNebula params={SKY} height="100svh" className="border-b border-hairline">
       <div className="container-page flex h-full flex-col justify-between py-8">
@@ -62,7 +69,7 @@ export default function NebulaHero() {
               href="/#services"
               className="inline-flex items-center gap-2 border border-[#f4e9ea]/25 px-6 py-3.5 text-sm font-semibold text-[#f4e9ea] transition-colors hover:border-[#e61e32] hover:text-[#e61e32]"
             >
-              Explore 5 practices
+              Explore {services.length} practices
             </Link>
             <Link
               href="/community"
@@ -75,7 +82,7 @@ export default function NebulaHero() {
 
         {/* Practice strip */}
         <div className="pointer-events-auto flex flex-wrap gap-x-6 gap-y-2 font-mono text-[10px] uppercase tracking-[0.2em] text-[#f4e9ea]/50">
-          {PRACTICES.map((p, i) => (
+          {practices.map((p, i) => (
             <Link
               key={p}
               href="/#services"

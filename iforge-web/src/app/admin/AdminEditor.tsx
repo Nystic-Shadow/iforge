@@ -2,7 +2,8 @@
 
 import React from "react";
 import type { SiteContent, ServiceItem } from "@/lib/content";
-import { PageHeader } from "./shell";
+import { MAX_CONTACTS } from "@/data/siteData";
+import { Notice, PageHeader } from "./shell";
 import {
   Field,
   TextArea,
@@ -21,7 +22,14 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "community", label: "Community" },
 ];
 
-export default function AdminEditor({ initialContent }: { initialContent: SiteContent }) {
+export default function AdminEditor({
+  initialContent,
+  loadError,
+}: {
+  initialContent: SiteContent;
+  /** The stored content couldn't be read; the form shows defaults and mustn't save them. */
+  loadError?: string;
+}) {
   const [content, setContent] = React.useState<SiteContent>(initialContent);
   const [tab, setTab] = React.useState<Tab>("site");
   const [saving, setSaving] = React.useState(false);
@@ -64,6 +72,12 @@ export default function AdminEditor({ initialContent }: { initialContent: SiteCo
         title="Content"
         description="Edit the words on the public site. Saving updates the live pages straight away."
       />
+      {loadError && (
+        <Notice>
+          Couldn&apos;t read the saved content ({loadError}). These are the default texts, so saving is off
+          until it loads — check the Supabase settings and reload.
+        </Notice>
+      )}
 
       {/* Tabs */}
       <div className="mt-8 flex flex-wrap gap-px overflow-hidden border border-hairline bg-hairline">
@@ -105,7 +119,7 @@ export default function AdminEditor({ initialContent }: { initialContent: SiteCo
         </span>
         <button
           onClick={save}
-          disabled={saving || !dirty}
+          disabled={saving || !dirty || Boolean(loadError)}
           className="bg-foreground px-6 py-3 text-sm font-semibold text-background transition-colors hover:bg-[#E61E32] disabled:opacity-50"
         >
           {saving ? "Saving…" : "Save changes"}
@@ -123,7 +137,7 @@ type TabProps = {
 // ---- Site & Contact ----
 function SiteTab({ content, update }: TabProps) {
   const c = content.siteConfig;
-  const set = (k: keyof typeof c, v: string) =>
+  const set = (k: keyof typeof c, v: string | string[]) =>
     update((d) => ({ ...d, siteConfig: { ...d.siteConfig, [k]: v } }));
   return (
     <Section title="Site & contact information">
@@ -131,11 +145,69 @@ function SiteTab({ content, update }: TabProps) {
       <Field label="Tagline" value={c.tagline} onChange={(v) => set("tagline", v)} />
       <Field label="Headline" value={c.headline} onChange={(v) => set("headline", v)} />
       <TextArea label="Subheadline" value={c.subheadline} onChange={(v) => set("subheadline", v)} />
-      <Field label="Contact email" value={c.contactEmail} onChange={(v) => set("contactEmail", v)} />
-      <Field label="Phone" value={c.phone} onChange={(v) => set("phone", v)} />
-      <Field label="Address" value={c.address} onChange={(v) => set("address", v)} />
-      <Field label="Founded" value={c.founded} onChange={(v) => set("founded", v)} />
+      <div className="grid gap-5 sm:grid-cols-2">
+        <ContactList
+          label="Contact email"
+          addLabel="+ Add email"
+          main={c.contactEmail}
+          extras={c.extraEmails ?? []}
+          onMain={(v) => set("contactEmail", v)}
+          onExtras={(v) => set("extraEmails", v)}
+        />
+        <ContactList
+          label="Phone"
+          addLabel="+ Add number"
+          main={c.phone}
+          extras={c.extraPhones ?? []}
+          onMain={(v) => set("phone", v)}
+          onExtras={(v) => set("extraPhones", v)}
+        />
+        <Field label="Address" value={c.address} onChange={(v) => set("address", v)} />
+        <Field label="Founded" value={c.founded} onChange={(v) => set("founded", v)} />
+      </div>
     </Section>
+  );
+}
+
+/**
+ * The main email or phone plus up to two more. The main one is used for
+ * replies and the mobile "Call" button; every one is listed on the site.
+ */
+function ContactList({
+  label,
+  addLabel,
+  main,
+  extras,
+  onMain,
+  onExtras,
+}: {
+  label: string;
+  addLabel: string;
+  main: string;
+  extras: string[];
+  onMain: (v: string) => void;
+  onExtras: (v: string[]) => void;
+}) {
+  return (
+    <div className="space-y-2">
+      <Field label={label} value={main} onChange={onMain} />
+      {extras.map((v, i) => (
+        <div key={i} className="flex gap-2">
+          <input
+            className="w-full border border-hairline bg-background px-3 py-2.5 text-sm text-foreground transition-colors focus:border-[#E61E32] focus:outline-none"
+            value={v}
+            aria-label={`${label} ${i + 2}`}
+            onChange={(e) => onExtras(extras.map((x, j) => (j === i ? e.target.value : x)))}
+          />
+          <SubtleButton tone="danger" onClick={() => onExtras(extras.filter((_, j) => j !== i))}>
+            Remove
+          </SubtleButton>
+        </div>
+      ))}
+      {extras.length < MAX_CONTACTS - 1 && (
+        <SubtleButton onClick={() => onExtras([...extras, ""])}>{addLabel}</SubtleButton>
+      )}
+    </div>
   );
 }
 

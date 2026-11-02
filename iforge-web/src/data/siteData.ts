@@ -32,7 +32,6 @@ export interface ServiceItem {
 
 export const siteConfig = {
   name: "iForge Technologies",
-  url: "https://www.iforge.in",
   tagline: "IT Services & Consulting",
   headline: "Accelerating Success With IT Services",
   subheadline: "Transform your business with cutting-edge technology and expert consultancy services tailored to your needs.",
@@ -40,7 +39,29 @@ export const siteConfig = {
   phone: "+91 99718 66720",
   address: "Plot No. 12, Sector 62, Noida, Uttar Pradesh, India",
   founded: "2024",
+  /** Up to two more of each, added in Admin → Content → Site & Contact. */
+  extraEmails: [] as string[],
+  extraPhones: [] as string[],
 };
+
+/** The live site's address, for links in emails. */
+export const SITE_URL = "https://www.iforge.in";
+
+/** Most numbers or addresses shown for each: the main one plus two extras. */
+export const MAX_CONTACTS = 3;
+
+type Contacts = { contactEmail: string; phone: string; extraEmails?: string[]; extraPhones?: string[] };
+
+/** The main email first, then any extras — blanks dropped. */
+export const allEmails = (c: Contacts) =>
+  [c.contactEmail, ...(c.extraEmails ?? [])].map((v) => v.trim()).filter(Boolean).slice(0, MAX_CONTACTS);
+
+/** The main phone first, then any extras — blanks dropped. */
+export const allPhones = (c: Contacts) =>
+  [c.phone, ...(c.extraPhones ?? [])].map((v) => v.trim()).filter(Boolean).slice(0, MAX_CONTACTS);
+
+/** A tel: link for a displayed number. */
+export const telHref = (phone: string) => `tel:${phone.replace(/[^0-9+]/g, "")}`;
 
 
 export const servicesData: ServiceItem[] = [
@@ -106,26 +127,29 @@ export const servicesData: ServiceItem[] = [
     ]
   },
   {
-    id: "cloud-services",
-    slug: "cloud-services",
-    title: "Cloud Services",
-    subtitle: "Trust a managed public cloud partner delivering end-to-end multi-cloud excellence",
-    shortDesc: "CloudSMART strategy delivering complete cloud consultancy, architecture, and multi-cloud management.",
-    longDesc: "Our CloudSMART strategy gives enterprises a complete cloud consultancy and delivery platform that adapts to your needs. Working across leading providers (AWS, Google Cloud, Azure), we help you unlock the full potential of modern cloud technologies to build scalable, resilient environments.",
+    id: "it-cloud",
+    slug: "it-cloud",
+    title: "Cloud & IT Infrastructure",
+    subtitle: "Multi-cloud platforms and resilient on-premise infrastructure, designed and managed by one team",
+    shortDesc: "Cloud architecture, migration and management, plus enterprise networking, servers, storage, and data center services.",
+    longDesc: "iForge brings your cloud and your on-premise IT under one accountable team. We architect, migrate, and manage workloads across AWS, Google Cloud, and Azure, and we design and maintain the networks, servers, storage, and data centers your business depends on. The result is a hybrid environment that is secure, scalable, cost-efficient, and built to run without interruption.",
     iconName: "Cloud",
     features: [
       "Multi-Cloud Architecture & Zero-Downtime Migration",
       "Cloud Cost Optimization (FinOps & Waste Reduction)",
       "DevOps, CI/CD & Kubernetes Orchestration",
-      "Serverless & Microservices Modernization",
-      "Cloud Security & Compliance Hardening"
+      "Enterprise Network Architecture & SD-WAN",
+      "Server Virtualization & High-Throughput Storage",
+      "Data Center Design, Build-Out & Operations",
+      "Disaster Recovery & Business Continuity"
     ],
-    technologies: ["AWS", "Google Cloud", "Microsoft Azure", "Kubernetes", "Docker", "Terraform", "ArgoCD", "Prometheus"],
+    technologies: ["AWS", "Google Cloud", "Microsoft Azure", "Kubernetes", "Docker", "Terraform", "VMware vSphere", "Hyper-V", "Cisco", "Fortinet", "HPE", "Dell EMC", "SAN/NAS"],
     deliverables: [
-      "Production multi-region cloud architecture",
+      "High-availability network and hybrid cloud architecture blueprint",
       "Automated Infrastructure as Code (IaC) repository",
-      "Comprehensive FinOps cost reduction report",
-      "24/7 automated cloud monitoring dashboard"
+      "Data center capacity, power & cooling plan",
+      "FinOps cost reduction report",
+      "Disaster recovery runbook with RPO/RTO specifications"
     ],
     metrics: [],
     offerings: [
@@ -143,18 +167,42 @@ export const servicesData: ServiceItem[] = [
         title: "DevOps & Cloud Automation",
         description: "Infrastructure as Code (Terraform), continuous integration pipelines, and containerized deployments with Kubernetes.",
         points: ["GitOps deployment workflows", "Self-healing Kubernetes clusters", "Multi-stage automated testing"]
+      },
+      {
+        title: "Network & Systems Engineering",
+        description: "High-throughput, redundant routing and switching setups with strict zero-trust boundary segmentation.",
+        points: ["SD-WAN deployment", "VLAN & firewall zoning", "Bandwidth traffic shaping"]
+      },
+      {
+        title: "Virtualization & Storage Clustering",
+        description: "VMware, Hyper-V, and enterprise SAN/NAS configurations optimized for latency-critical workloads.",
+        points: ["Live VM migration setups", "Deduplication & tiered caching", "Automated off-site tape/cloud backups"]
+      },
+      {
+        title: "Data Center Services",
+        description: "Design, build-out, and operation of server rooms, on-premise data centers, and colocation footprints — built for uptime and room to grow.",
+        points: ["Rack, power & cooling design", "Structured cabling & physical security", "Colocation planning & data center migration"]
       }
     ],
     benefits: [
-      "Lower cloud infrastructure spend through FinOps practices",
+      "One team accountable for on-premise IT and cloud alike",
+      "Elimination of single points of failure across critical systems",
       "High availability and automated disaster recovery across availability zones",
-      "Instant resource scalability during traffic spikes and peak enterprise loads",
-      "Multi-cloud vendor lock-in prevention"
+      "Lower infrastructure spend through FinOps practices and right-sized hardware",
+      "Instant scalability during traffic spikes, with no multi-cloud vendor lock-in"
     ],
     faqs: [
       {
+        question: "Can iForge manage hybrid infrastructure (on-premise + cloud)?",
+        answer: "Yes, our team specializes in interconnecting on-premise server rooms and data centers with public clouds using VPNs and direct cloud interconnects."
+      },
+      {
         question: "Which cloud providers does iForge officially support?",
         answer: "We design, migrate and run workloads on Amazon Web Services (AWS), Google Cloud Platform (GCP) and Microsoft Azure."
+      },
+      {
+        question: "Can iForge design or modernize our data center?",
+        answer: "Yes. We plan and build server rooms and data centers — rack layout, power and cooling, cabling, virtualization, and storage — and can move workloads into colocation or the cloud when that is the better fit."
       },
       {
         question: "How do you prevent downtime during database migrations?",
@@ -163,116 +211,87 @@ export const servicesData: ServiceItem[] = [
     ]
   },
   {
-    id: "it-infrastructure",
-    slug: "it-infrastructure",
-    title: "IT Infrastructure",
-    subtitle: "Deliver resilient experiences with agile infrastructure ensuring business continuity",
-    shortDesc: "Robust enterprise networking, system architecture, AMC services, and hardware engineering.",
-    longDesc: "iForge Technologies delivers secure, scalable, and reliable IT infrastructure services designed to support evolving enterprise demands. We ensure your foundational hardware, network architecture, and operational systems run without interruption.",
-    iconName: "Server",
-    features: [
-      "Enterprise Network Architecture & SD-WAN",
-      "Server Virtualization & High-Throughput Storage",
-      "Annual Maintenance Contracts (AMC Services)",
-      "Disaster Recovery & Redundant Power Architecture",
-      "Data Center Setup & Remote Hands Operations"
-    ],
-    technologies: ["VMware vSphere", "Cisco", "Fortinet", "HPE", "Dell EMC", "Hyper-V", "Ubiquiti", "SAN/NAS"],
-    deliverables: [
-      "High-availability network topology blueprint",
-      "Hardware health diagnostics & capacity plan",
-      "Comprehensive AMC service contract & SLA guide",
-      "Disaster recovery runbook with RPO/RTO specifications"
-    ],
-    metrics: [],
-    offerings: [
-      {
-        title: "Network & Systems Engineering",
-        description: "High-throughput, redundant routing and switching setups with strict zero-trust boundary segmentation.",
-        points: ["SD-WAN deployment", "VLAN & firewall zoning", "Bandwidth traffic shaping"]
-      },
-      {
-        title: "Comprehensive AMC Support",
-        description: "Proactive annual maintenance, scheduled hardware diagnostics, and priority on-site technician dispatch.",
-        points: ["Preventive hardware maintenance", "Firmware updates & thermal tuning", "Spare parts replacement reserve"]
-      },
-      {
-        title: "Virtualization & Storage Clustering",
-        description: "VMware, Hyper-V, and enterprise SAN/NAS configurations optimized for latency-critical workloads.",
-        points: ["Live VM migration setups", "Deduplication & tiered caching", "Automated off-site tape/cloud backups"]
-      }
-    ],
-    benefits: [
-      "Elimination of single points of hardware failure across critical nodes",
-      "24/7 uptime monitoring with fast SLA response commitments",
-      "Prolonged hardware lifecycle and predictable operational budgeting",
-      "Complete physical and logical network security"
-    ],
-    faqs: [
-      {
-        question: "What is covered in an iForge IT AMC (Annual Maintenance Contract)?",
-        answer: "Our AMC covers quarterly preventive maintenance, emergency on-site engineer visits, hardware repairs, OS/firmware patching, network health checks, and 24/7 helpdesk support."
-      },
-      {
-        question: "Can iForge manage hybrid infrastructure (on-premise + cloud)?",
-        answer: "Yes, our team specializes in interconnecting on-premise server rooms and data centers with public clouds using VPNs and direct cloud interconnects."
-      }
-    ]
-  },
-  {
     id: "cybersecurity-services",
     slug: "cybersecurity-services",
-    title: "Cybersecurity Services",
-    subtitle: "End-to-end cybersecurity services ensuring safety, compliance, and continuous resilience",
-    shortDesc: "Vulnerability assessment, penetration testing, endpoint protection, and proactive defense.",
-    longDesc: "Today's threat landscape is highly dynamic, driven by the rapid adoption of disruptive technologies. iForge brings deep expertise in Defense, Protection, and Risk Management to ensure your mission-critical digital assets remain fortified.",
+    title: "Cybersecurity",
+    subtitle: "Find and fix weaknesses before attackers do, and stay compliant as you grow",
+    shortDesc: "Penetration testing, vulnerability management, cloud security, threat protection, and compliance readiness.",
+    longDesc: "Attackers look for the one gap you missed — in an application, an API, a misconfigured cloud account, or a phishing email. iForge tests your systems the way a real adversary would, prioritizes what actually matters, and works alongside your team until every finding is fixed and verified. From one-off penetration tests to ongoing vulnerability management and audit readiness, we help you reduce risk, protect data, and prove it to customers and regulators.",
     iconName: "ShieldCheck",
     features: [
-      "Vulnerability Assessment & Pen Testing (VAPT)",
-      "Next-Gen Firewall & Endpoint Detection (EDR/XDR)",
-      "Security Operations Center (SOC) 24/7 Monitoring",
-      "Compliance Audits (ISO 27001, SOC 2, HIPAA, GDPR)",
-      "Zero Trust Identity & Access Management (IAM)"
+      "Penetration Testing: Web, API, Mobile, Network & Cloud",
+      "Vulnerability Assessment & Continuous Vulnerability Management",
+      "Cloud Security Posture Review (AWS, Azure, Google Cloud)",
+      "Red Teaming, Phishing Simulation & Social Engineering",
+      "Endpoint, Firewall & Email Threat Protection",
+      "Compliance Readiness (ISO 27001, SOC 2, GDPR, DPDP Act)",
+      "Incident Response Planning & Security Awareness Training"
     ],
-    technologies: ["Palo Alto Networks", "Trend Micro", "CrowdStrike", "Splunk", "Wireshark", "Burp Suite", "Tenable Nessus", "Okta"],
+    technologies: ["Burp Suite", "OWASP ZAP", "Metasploit", "Nmap", "Tenable Nessus", "Kali Linux", "Wireshark", "CrowdStrike", "Palo Alto Networks", "Splunk", "Okta"],
     deliverables: [
-      "Executive VAPT Audit Report with CVSS scoring",
-      "Step-by-step remediation guide for developer teams",
-      "ISO 27001 / SOC 2 readiness gap assessment",
-      "Incident response and breach containment protocol"
+      "Executive summary with business-level risk ratings",
+      "Detailed technical report with CVSS-scored findings and proof of concept",
+      "Prioritized, step-by-step remediation guide for developers and IT",
+      "Re-test report confirming each fix",
+      "Compliance gap assessment and security policy pack",
+      "Incident response playbook with roles and escalation paths"
     ],
     metrics: [],
     offerings: [
       {
-        title: "VAPT & Penetration Testing",
-        description: "Rigorous ethical hacking targeting web apps, cloud accounts, APIs, mobile apps, and internal network perimeters.",
-        points: ["OWASP Top 10 vulnerabilities", "Privilege escalation simulations", "Social engineering & phishing assessments"]
+        title: "Penetration Testing",
+        description: "Manual, expert-led ethical hacking of your web apps, APIs, mobile apps, and internal and external networks — going well beyond automated scanners.",
+        points: ["OWASP Top 10 & API Security Top 10", "Authentication, session & business-logic flaws", "Privilege escalation & lateral movement"]
       },
       {
-        title: "Perimeter & Endpoint Fortification",
-        description: "Using industry-leading platforms such as Palo Alto Networks and Trend Micro for automated threat quarantine.",
-        points: ["Next-Gen firewall policies", "Ransomware behavioral blocking", "Strict USB and endpoint lockouts"]
+        title: "Vulnerability Assessment & Management",
+        description: "Scheduled scanning and expert triage across servers, endpoints, and applications, so the riskiest issues are fixed first.",
+        points: ["Asset discovery & attack-surface mapping", "Risk-based prioritization", "Patch tracking & verification"]
       },
       {
-        title: "Regulatory Compliance & Audit Preparation",
-        description: "Comprehensive security policy authoring and gap remediation to achieve ISO 27001, SOC 2 Type II, and GDPR compliance.",
-        points: ["Audit defense representation", "Data classification protocols", "Mandatory staff security training"]
+        title: "Cloud Security Assessment",
+        description: "A configuration and access review of your AWS, Azure, or Google Cloud accounts against industry benchmarks.",
+        points: ["IAM & least-privilege review", "Exposed storage & network misconfigurations", "CIS benchmark alignment"]
+      },
+      {
+        title: "Red Teaming & Social Engineering",
+        description: "Realistic attack simulations, including phishing campaigns, that test your people and processes as well as your technology.",
+        points: ["Phishing & vishing simulations", "Objective-based attack scenarios", "Detection & response evaluation"]
+      },
+      {
+        title: "Endpoint & Network Protection",
+        description: "Design and hardening of firewalls, endpoint detection, and email security to block ransomware and data theft.",
+        points: ["Next-gen firewall policies", "EDR/XDR deployment & tuning", "Email filtering & anti-phishing controls"]
+      },
+      {
+        title: "Compliance & Audit Readiness",
+        description: "Policy writing, gap remediation, and evidence preparation for ISO 27001, SOC 2, GDPR, and India's DPDP Act.",
+        points: ["Gap assessment & remediation roadmap", "Security policies & data classification", "Staff security awareness training"]
       }
     ],
     benefits: [
-      "Complete proactive protection against ransomware and data exfiltration",
-      "Guaranteed compliance with regulatory and enterprise client security mandates",
-      "Minimization of security incident impact, loss, and operational downtime",
-      "Strengthened client trust through verifiable security certifications"
+      "Find and fix vulnerabilities before attackers can exploit them",
+      "Clear, prioritized findings your developers can act on immediately",
+      "Lower risk of ransomware, data breaches, and costly downtime",
+      "Evidence to satisfy auditors, enterprise customers, and regulators",
+      "A security program that keeps pace with new releases and infrastructure changes"
     ],
     faqs: [
       {
-        question: "How frequently should an enterprise conduct VAPT?",
-        answer: "We recommend comprehensive VAPT testing bi-annually, as well as immediately following any major production feature release or infrastructure change."
+        question: "What is the difference between a vulnerability assessment and a penetration test?",
+        answer: "A vulnerability assessment uses scanning and expert review to list known weaknesses across your systems. A penetration test goes further: our testers actively exploit weaknesses, as a real attacker would, to show what could actually be accessed and how to stop it."
       },
       {
-        question: "Do you assist our developers with fixing the vulnerabilities discovered?",
-        answer: "Yes, our security engineers provide exact code snippets, configuration patches, and re-test all remediated issues free of charge."
+        question: "How often should we run a penetration test?",
+        answer: "We recommend at least once a year, and after any major release, infrastructure change, or cloud migration. Many teams pair this with continuous vulnerability scanning between tests."
+      },
+      {
+        question: "Will testing disrupt our live systems?",
+        answer: "Testing is scoped and scheduled with you in advance. We avoid destructive techniques on production, can test against staging environments, and stay in contact throughout so any concern is handled immediately."
+      },
+      {
+        question: "Do you help our team fix the issues you find?",
+        answer: "Yes. Every finding comes with clear remediation steps, our engineers can work directly with your developers and IT team, and we re-test to confirm each fix."
       }
     ]
   },
@@ -334,6 +353,67 @@ export const servicesData: ServiceItem[] = [
       {
         question: "Do we retain 100% full ownership of the source code and IP?",
         answer: "Yes, 100% of the source code, design systems, architectural schemas, repositories, and deployment configurations are transferred directly to your organization upon project delivery."
+      }
+    ]
+  },
+  {
+    id: "digital-marketing",
+    slug: "digital-marketing",
+    title: "Digital Marketing",
+    subtitle: "Launch, grow, and reinvent your brand with targeted, data-driven campaigns",
+    shortDesc: "Technical SEO, performance marketing, conversion rate optimization, and full-funnel analytics.",
+    longDesc: "iForge Digital Marketing helps brands get found, win attention, and turn visitors into qualified leads. We combine technical SEO, data-driven paid campaigns, and conversion-focused landing pages with transparent analytics, so every channel is measured against the pipeline and revenue it brings in.",
+    iconName: "TrendingUp",
+    features: [
+      "Search Engine Optimization (Technical, Content & On-Page)",
+      "Performance Marketing (Google Ads, Meta & LinkedIn Campaigns)",
+      "Content Strategy & Copywriting",
+      "Conversion Rate Optimization (CRO & A/B Testing)",
+      "Full-Funnel Analytics, Attribution & Growth Tracking"
+    ],
+    technologies: ["Google Analytics 4", "Search Console", "Google Tag Manager", "Looker Studio", "Semrush", "Ahrefs", "Meta Ads", "LinkedIn Campaign Manager"],
+    deliverables: [
+      "Technical SEO audit with a prioritized action plan",
+      "Paid acquisition campaigns with tracked conversions",
+      "Conversion-optimized landing page templates",
+      "Looker Studio dashboard for spend, leads, and return"
+    ],
+    metrics: [],
+    offerings: [
+      {
+        title: "Organic Search & Technical SEO",
+        description: "Keyword research, technical site health, and authority-building content that earns sustainable organic traffic.",
+        points: ["Site speed & indexation fixes", "Schema structured data markup", "Search-intent topic clusters"]
+      },
+      {
+        title: "Performance Marketing",
+        description: "Search and social ad campaigns managed against customer acquisition cost (CAC) and customer lifetime value.",
+        points: ["Audience segmentation & lookalikes", "Ad creative iteration & testing", "Bid strategy tuning"]
+      },
+      {
+        title: "Conversion Rate Optimization (CRO)",
+        description: "User-journey analysis, heatmaps, and structured testing to turn more of your existing traffic into qualified leads.",
+        points: ["Heatmap & scroll-depth analysis", "Form and landing page redesigns", "A/B and multivariate testing"]
+      }
+    ],
+    benefits: [
+      "A steady pipeline of qualified, high-intent inbound leads",
+      "Measurable return on ad spend with transparent attribution",
+      "Organic search traffic that keeps working beyond ad budgets",
+      "Consistent messaging across search, social, and email"
+    ],
+    faqs: [
+      {
+        question: "How long does it take to see results from SEO?",
+        answer: "Technical fixes usually improve indexation within a few weeks, while meaningful ranking and inbound lead growth typically builds over three to six months."
+      },
+      {
+        question: "Do you handle both B2B and B2C campaigns?",
+        answer: "Yes. Strategies are tailored to each business, from B2B lead generation on LinkedIn and Google Search to high-volume consumer campaigns."
+      },
+      {
+        question: "How do we track what our marketing spend returns?",
+        answer: "We set up conversion tracking in Google Analytics 4 and Tag Manager and report spend, leads, and cost per lead in a shared Looker Studio dashboard."
       }
     ]
   }

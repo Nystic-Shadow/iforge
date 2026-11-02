@@ -11,7 +11,10 @@ export async function POST(request: Request) {
   if (!(file instanceof File)) {
     return Response.json({ ok: false, error: "No image received." }, { status: 400 });
   }
-  const result = await saveImage(file, "team");
+  const result = await saveImage(file, "team").catch((e) => ({
+    url: undefined,
+    error: e instanceof Error ? e.message : "Upload failed.",
+  }));
   if (!result.url) return Response.json({ ok: false, error: result.error }, { status: 400 });
   return Response.json({ ok: true, url: result.url });
 }

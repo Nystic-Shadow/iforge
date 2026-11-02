@@ -3,7 +3,8 @@ import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import SiteChrome from "@/components/SiteChrome";
-import { siteConfig } from "@/data/siteData";
+import { SiteContentProvider } from "@/components/SiteContentProvider";
+import { getContent } from "@/lib/content";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -18,50 +19,55 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   weight: ["500", "600", "700", "800"],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://iforge.in"),
-  title: {
-    default: `${siteConfig.name} | ${siteConfig.tagline}`,
-    template: `%s | ${siteConfig.name}`,
-  },
-  description: siteConfig.subheadline,
-  keywords: [
-    "iForge Technologies",
-    "IT Services",
-    "Cloud Architecture",
-    "AWS Consulting",
-    "Google Cloud Consulting",
-    "Cybersecurity Services",
-    "VAPT",
-    "AI & ML Consulting",
-    "Application Development",
-    "Enterprise Dashboards",
-    "Custom Web Applications",
-    "Cloud Migration"
-  ],
-  authors: [{ name: "iForge Technologies" }],
-  creator: "iForge Technologies",
-  icons: {
-    icon: "/images/cropped-iforge-logo2-32x32.png",
-    apple: "/images/cropped-iforge-logo2-180x180.png",
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://iforge.in",
-    title: `${siteConfig.name} | ${siteConfig.tagline}`,
+export async function generateMetadata(): Promise<Metadata> {
+  const { siteConfig } = await getContent();
+  return {
+    metadataBase: new URL("https://iforge.in"),
+    title: {
+      default: `${siteConfig.name} | ${siteConfig.tagline}`,
+      template: `%s | ${siteConfig.name}`,
+    },
     description: siteConfig.subheadline,
-    siteName: siteConfig.name,
-    images: [
-      {
-        url: "/images/iforge-logo1.png",
-        width: 1200,
-        height: 630,
-        alt: siteConfig.name,
-      },
+    keywords: [
+      "iForge Technologies",
+      "IT Services",
+      "Cloud Architecture",
+      "AWS Consulting",
+      "Google Cloud Consulting",
+      "Cybersecurity",
+      "VAPT",
+      "AI & ML Consulting",
+      "Application Development",
+      "Enterprise Dashboards",
+      "Digital Marketing",
+      "SEO Services",
+      "Custom Web Applications",
+      "Cloud Migration"
     ],
-  },
-};
+    authors: [{ name: "iForge Technologies" }],
+    creator: "iForge Technologies",
+    icons: {
+      icon: "/images/cropped-iforge-logo2-32x32.png",
+      apple: "/images/cropped-iforge-logo2-180x180.png",
+    },
+    openGraph: {
+      type: "website",
+      locale: "en_US",
+      url: "https://iforge.in",
+      title: `${siteConfig.name} | ${siteConfig.tagline}`,
+      description: siteConfig.subheadline,
+      siteName: siteConfig.name,
+      images: [
+        {
+          url: "/images/iforge-logo1.png",
+          width: 1200,
+          height: 630,
+          alt: siteConfig.name,
+        },
+      ],
+    },
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: "#000000",
@@ -69,11 +75,16 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { siteConfig, services } = await getContent();
+  const siteContent = {
+    siteConfig,
+    services: services.map(({ id, slug, title, shortDesc }) => ({ id, slug, title, shortDesc })),
+  };
   return (
     <html 
       lang="en" 
@@ -104,7 +115,9 @@ export default function RootLayout({
         className="min-h-screen bg-background text-foreground font-sans antialiased flex flex-col justify-between selection:bg-[#E61E32] selection:text-white transition-colors duration-250"
       >
         <ThemeProvider>
-          <SiteChrome>{children}</SiteChrome>
+          <SiteContentProvider value={siteContent}>
+            <SiteChrome>{children}</SiteChrome>
+          </SiteContentProvider>
         </ThemeProvider>
       </body>
     </html>

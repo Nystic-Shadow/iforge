@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { servicesData } from "@/data/siteData";
+import { useSiteContent } from "@/components/SiteContentProvider";
 import { ArrowRight, ArrowLeft, Check } from "reicon-react";
 
 const INPUT =
@@ -11,6 +11,7 @@ const LABEL =
   "mb-2 block font-mono text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground";
 
 export default function QuoteCalculator() {
+  const { services: servicesData } = useSiteContent();
   const [step, setStep] = useState(1);
   const [selectedService, setSelectedService] = useState(servicesData[0].slug);
   const [scope, setScope] = useState("mid");

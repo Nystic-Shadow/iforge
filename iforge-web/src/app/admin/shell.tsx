@@ -69,12 +69,15 @@ const NAV = [
 export default function AdminShell({
   initialInquiries,
   storageMode,
+  storageWarning,
   hermes,
   emailEnabled,
   children,
 }: {
   initialInquiries: Inquiry[];
   storageMode: "supabase" | "local";
+  /** A setup problem that stops saves from working. */
+  storageWarning: string | null;
   hermes: { webhook: boolean; agentApi: boolean };
   emailEnabled: boolean;
   children: React.ReactNode;
@@ -244,7 +247,10 @@ export default function AdminShell({
           </div>
         </aside>
 
-        <main className="px-5 py-8 sm:px-8 lg:px-12 lg:py-10">{children}</main>
+        <main className="px-5 py-8 sm:px-8 lg:px-12 lg:py-10">
+          {storageWarning && <Notice>{storageWarning}</Notice>}
+          {children}
+        </main>
 
         {/* New-enquiry toasts */}
         <div className="pointer-events-none fixed right-4 top-4 z-50 flex w-80 flex-col gap-2">
@@ -278,6 +284,15 @@ export default function AdminShell({
         </div>
       </div>
     </InboxContext.Provider>
+  );
+}
+
+/** A setup or load problem, shown above the page content. */
+export function Notice({ children }: { children: React.ReactNode }) {
+  return (
+    <div role="alert" className="mx-auto mb-6 max-w-4xl rounded-lg border border-[#E61E32]/40 bg-[#E61E32]/[0.06] px-4 py-3 text-sm text-foreground">
+      {children}
+    </div>
   );
 }
 

@@ -1,11 +1,10 @@
 import React from "react";
 import type { Metadata } from "next";
 import QuoteCalculator from "@/components/QuoteCalculator";
-import { siteConfig } from "@/data/siteData";
 import { Reveal } from "@/components/ui/reveal";
 
 export const metadata: Metadata = {
-  title: `Request a Quote & Project Estimator | ${siteConfig.name}`,
+  title: "Request a Quote & Project Estimator",
   description:
     "Calculate an estimated project scope and request an architectural consultation with iForge Technologies.",
 };

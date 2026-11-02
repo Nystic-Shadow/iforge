@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { isAuthenticated } from "@/lib/auth";
 import { listInquiries } from "@/lib/inquiries";
-import { storageMode } from "@/lib/content";
+import { storageMode, storageWarning } from "@/lib/content";
 import { isAgentApiConfigured, isHermesWebhookConfigured } from "@/lib/hermes";
 import { isEmailReady } from "@/lib/email";
 import AdminShell from "../shell";
@@ -16,6 +16,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
     <AdminShell
       initialInquiries={inquiries}
       storageMode={storageMode}
+      storageWarning={storageWarning}
       hermes={{ webhook: isHermesWebhookConfigured, agentApi: isAgentApiConfigured }}
       emailEnabled={emailEnabled}
     >

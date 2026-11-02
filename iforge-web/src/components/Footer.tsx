@@ -1,44 +1,21 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
-import { servicesData, siteConfig } from "@/data/siteData";
+import { useSiteContent } from "@/components/SiteContentProvider";
+import { allEmails, allPhones, telHref } from "@/data/siteData";
 import { ArrowRight, ArrowUpRight } from "reicon-react";
-import HalftoneWordmarkFooter, {
-  type FooterColumn,
-} from "@/components/ui/halftone-wordmark-footer";
+import HalftoneWordmarkFooter from "@/components/ui/halftone-wordmark-footer";
 
-// Columns for the halftone wordmark band, built from the real site navigation.
-const halftoneColumns: FooterColumn[] = [
-  {
-    title: "Practices",
-    links: servicesData.slice(0, 3).map((s) => ({
-      label: s.title,
-      href: `/services/${s.slug}`,
-    })),
-  },
-  {
-    title: "Company",
-    links: [
-      { label: "About", href: "/about" },
-      { label: "Team", href: "/team" },
-      { label: "Community", href: "/community" },
-      { label: "Get a Quote", href: "/quote" },
-    ],
-  },
-  {
-    title: "Contact",
-    links: [
-      { label: siteConfig.contactEmail, href: `mailto:${siteConfig.contactEmail}` },
-      { label: siteConfig.phone, href: `tel:${siteConfig.phone.replace(/[^0-9+]/g, "")}` },
-    ],
-  },
-];
+// The registered company name for the sign-off at the very bottom.
+const LEGAL_NAME = "iForge Technologies LLP";
 
 const linkCol = (title: string, links: { label: string; href: string }[]) => (
   <div>
     <h3 className="mb-5 font-mono text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
       {title}
     </h3>
-    <ul className="space-y-3 text-sm">
+    <ul className="space-y-3 text-sm [overflow-wrap:anywhere]">
       {links.map((l) => (
         <li key={l.label}>
           <Link
@@ -54,6 +31,7 @@ const linkCol = (title: string, links: { label: string; href: string }[]) => (
 );
 
 export default function Footer() {
+  const { siteConfig, services: servicesData } = useSiteContent();
   const year = new Date().getFullYear();
 
   return (
@@ -87,10 +65,11 @@ export default function Footer() {
 
       {/* Directory */}
       <footer className="border-t border-hairline">
-        <div className="container-page py-16">
-          <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
+        <div className="container-page py-12 md:py-16">
+          {/* Phones: brand on top, link columns two across. */}
+          <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:gap-12 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
             {/* Brand */}
-            <div className="max-w-sm">
+            <div className="col-span-2 max-w-sm md:col-span-1">
               <span className="text-2xl font-black tracking-tight text-foreground lowercase">
                 iforge
               </span>
@@ -108,7 +87,7 @@ export default function Footer() {
             {linkCol("Platform", [
               { label: "Builders Community", href: "/community" },
               { label: "Project Calculator", href: "/quote" },
-              { label: "Cloud Migration", href: "/services/cloud-services" },
+              { label: "Cloud Migration", href: "/services/it-cloud" },
               { label: "Enterprise Apps", href: "/services/application-development" },
             ])}
 
@@ -116,15 +95,15 @@ export default function Footer() {
               { label: "About", href: "/about" },
               { label: "Team", href: "/team" },
               { label: "Contact", href: "/contact" },
-              { label: siteConfig.phone, href: `tel:${siteConfig.phone.replace(/[^0-9+]/g, "")}` },
-              { label: siteConfig.contactEmail, href: `mailto:${siteConfig.contactEmail}` },
+              ...allPhones(siteConfig).map((p) => ({ label: p, href: telHref(p) })),
+              ...allEmails(siteConfig).map((e) => ({ label: e, href: `mailto:${e}` })),
             ])}
           </div>
 
           {/* Meta strip */}
-          <div className="mt-14 flex flex-col gap-4 border-t border-hairline pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-10 flex flex-col gap-4 border-t border-hairline pt-6 md:mt-14 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
             <p>
-              © {year} {siteConfig.name}. Noida, India — serving global clients.
+              © {year} {LEGAL_NAME}. Noida, India — serving global clients.
             </p>
             <div className="flex flex-wrap gap-6">
               <Link href="/privacy" className="hover:text-foreground">
@@ -147,12 +126,14 @@ export default function Footer() {
       {/* Giant halftone wordmark sign-off */}
       <HalftoneWordmarkFooter
         wordmark="iforge"
-        label={siteConfig.name}
-        meta={`© ${year} · Noida, India`}
-        columns={halftoneColumns}
+        // The copyright line above already carries the name — no second one here.
+        label=""
+        meta=""
+        columns={[]}
         preset="night"
         palette={{ background: "#050505", ink: "#e9e4da", warm: "#E61E32" }}
-        height="clamp(420px, 34vw, 600px)"
+        // Scales with the screen so phones don't get a tall empty band above the word.
+        height="clamp(220px, 34vw, 600px)"
       />
     </div>
   );

@@ -34,6 +34,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
+# Admin edits, enquiries and uploads (when Supabase isn't configured) live in
+# /app/.data — the nextjs user must be able to write there. Mount a volume on it.
+RUN mkdir -p /app/.data && chown nextjs:nodejs /app/.data
+
 USER nextjs
 
 EXPOSE 3000

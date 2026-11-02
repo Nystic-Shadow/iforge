@@ -1,7 +1,6 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { servicesData, siteConfig } from "@/data/siteData";
 import { getContent } from "@/lib/content";
 import ServiceFaqAccordion from "@/components/services/ServiceFaqAccordion";
 import ContactForm from "@/components/ContactForm";
@@ -13,15 +12,17 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  return servicesData.map((s) => ({ slug: s.slug }));
+  const { services } = await getContent();
+  return services.map((s) => ({ slug: s.slug }));
 }
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const service = servicesData.find((s) => s.slug === slug);
+  const { services } = await getContent();
+  const service = services.find((s) => s.slug === slug);
   if (!service) return { title: "Service Not Found" };
   return {
-    title: `${service.title} | ${siteConfig.name}`,
+    title: service.title,
     description: service.shortDesc,
   };
 }

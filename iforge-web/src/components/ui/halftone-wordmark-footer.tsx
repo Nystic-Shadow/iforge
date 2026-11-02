@@ -484,11 +484,14 @@ export default function HalftoneWordmarkFooter({
       <style>{HWF_CSS}</style>
       <canvas ref={canvasRef} aria-hidden="true" />
       <span className="hwf-sr">{wordmark}</span>
+      {(label || meta || columns.length > 0) && (
       <div className="hwf-top">
-        <div className="hwf-brand">
-          <strong>{label}</strong>
-          <span>{meta}</span>
-        </div>
+        {(label || meta) && (
+          <div className="hwf-brand">
+            <strong>{label}</strong>
+            <span>{meta}</span>
+          </div>
+        )}
         {columns.map((col) => (
           <nav className="hwf-col" key={col.title} aria-label={col.title}>
             <h3>{col.title}</h3>
@@ -502,6 +505,7 @@ export default function HalftoneWordmarkFooter({
           </nav>
         ))}
       </div>
+      )}
       <div className="hwf-rule">
         {backToTop ? (
           <button type="button" className="hwf-up" onClick={toTop}>

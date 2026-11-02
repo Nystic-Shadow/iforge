@@ -7,6 +7,17 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
+    # ADMIN_PASSWORD, Supabase keys, etc. (see iforge-web/.env.example)
+    env_file:
+      - path: ./iforge-web/.env.local
+        required: false
     environment:
       - NODE_ENV=production
       - PORT=3000
+    volumes:
+      # Keeps admin edits, enquiries and uploads across rebuilds when
+      # Supabase isn't configured.
+      - iforge_data:/app/.data
+
+volumes:
+  iforge_data:

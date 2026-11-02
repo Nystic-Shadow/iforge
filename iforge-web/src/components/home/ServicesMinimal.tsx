@@ -6,6 +6,8 @@ import { ArrowUpRight } from "reicon-react";
 import { servicesData, type ServiceItem } from "@/data/siteData";
 import { Reveal, Stagger, RevealItem } from "@/components/ui/reveal";
 
+const COUNT_WORDS = ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
+
 export default function ServicesMinimal({ services = servicesData }: { services?: ServiceItem[] }) {
   return (
     <section id="services" className="section border-b border-hairline">
@@ -19,9 +21,9 @@ export default function ServicesMinimal({ services = servicesData }: { services?
               </h2>
             </div>
             <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-              Five core enterprise practice groups delivering full-lifecycle cloud
-              architecture, machine-learning systems, cybersecurity, and application
-              engineering.
+              {COUNT_WORDS[services.length] ?? services.length} core enterprise practice groups
+              delivering full-lifecycle cloud architecture, machine-learning systems,
+              cybersecurity, application engineering, and digital marketing.
             </p>
           </div>
         </Reveal>

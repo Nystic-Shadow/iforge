@@ -12,7 +12,7 @@ export default function HomeQuoteTeaser({
   services?: ServiceItem[];
 }) {
   const servicesList = services;
-  const [selectedService, setSelectedService] = useState("cloud-services");
+  const [selectedService, setSelectedService] = useState("it-cloud");
   const [timeline, setTimeline] = useState("medium");
 
   const estimates: Record<string, { duration: string; team: string }> = {

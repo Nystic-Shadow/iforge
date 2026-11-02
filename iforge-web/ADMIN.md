@@ -6,8 +6,8 @@ website — is managed at **`/admin`**, with no code changes.
 | Section | What it does |
 | --- | --- |
 | **Inbox** | Every contact-form and quote-wizard submission, live. Change status, assign to Hermes or yourself, keep notes, draft a reply, and see an activity log of everything that happened. |
-| **Team** | The people on the public `/team` page: photo upload, name, role, bio, links, order. |
-| **Content** | Site & contact info, the five services, About (values + timeline), Community. |
+| **Team** | The people on the public `/team` page: photo upload, name, role, bio, links, order. Turn on **Core member** to list someone in the Core team section; everyone else appears under Our team. Photos are optional. |
+| **Content** | Site & contact info (also used by the nav, footer, page titles and emails), the services, About (values + timeline), Community. |
 
 ## 1. Sign in
 
@@ -23,8 +23,10 @@ Restart the dev server and sign in at `/admin`.
 
 - **Without Supabase (development):** edits, enquiries and team photos are
   saved to local files — `.data/` and `public/uploads/` (both gitignored). The
-  sidebar shows **Local files (dev)**. Fine on your machine, but most hosts
-  don't keep files, so connect Supabase before going live.
+  sidebar shows **Local files (dev)**. Fine on your machine or a server with a
+  persistent disk (Docker: the `iforge_data` volume), but serverless hosts such
+  as Vercel don't keep files — there the admin refuses to save and shows a
+  warning until Supabase is connected.
 - **With Supabase (production):**
   1. Create a free project at <https://supabase.com>.
   2. In the **SQL Editor**, run [`supabase/schema.sql`](supabase/schema.sql)

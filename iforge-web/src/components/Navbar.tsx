@@ -13,7 +13,7 @@ import {
   useSpring,
 } from "framer-motion";
 import { Menu, X, ArrowUpRight, ArrowRight } from "reicon-react";
-import { siteConfig, servicesData } from "@/data/siteData";
+import { useSiteContent } from "@/components/SiteContentProvider";
 import ThemeToggle from "./ThemeToggle";
 import { getLenis } from "@/lib/lenis";
 
@@ -30,6 +30,7 @@ const SCROLLED_AT = 24; // px before the bar becomes the floating pill
 const HIDE_AFTER = 260; // px before scrolling down tucks the pill away
 
 export default function Navbar() {
+  const { siteConfig, services: servicesData } = useSiteContent();
   const [isOpen, setIsOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);

@@ -1,17 +1,20 @@
 import React from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { siteConfig } from "@/data/siteData";
+import { getContent } from "@/lib/content";
 import LegalPage from "@/components/LegalPage";
 
-export const metadata: Metadata = {
-  title: `Privacy Policy | ${siteConfig.name}`,
-  description: `How ${siteConfig.name} collects, uses and protects the information you share with us.`,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { siteConfig } = await getContent();
+  return {
+    title: "Privacy Policy",
+    description: `How ${siteConfig.name} collects, uses and protects the information you share with us.`,
+  };
+}
 
-const email = siteConfig.contactEmail;
-
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
+  const { siteConfig } = await getContent();
+  const email = siteConfig.contactEmail;
   return (
     <LegalPage
       eyebrow="Legal"

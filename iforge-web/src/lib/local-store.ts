@@ -9,11 +9,18 @@ import path from "path";
  * production should use Supabase — see ADMIN.md.
  */
 
-const DATA_DIR =
+const SERVERLESS = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+
+export const DATA_DIR =
   process.env.DATA_DIR ||
-  (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME
-    ? path.join("/tmp", ".data")
-    : path.join(process.cwd(), ".data"));
+  (SERVERLESS ? path.join("/tmp", ".data") : path.join(process.cwd(), ".data"));
+
+/**
+ * True on serverless hosts with no DATA_DIR: `/tmp` there is per-instance and
+ * wiped on every cold start or deploy, so anything written is soon lost and
+ * other instances never see it. Saves that must last are refused instead.
+ */
+export const isEphemeralStorage = SERVERLESS && !process.env.DATA_DIR;
 
 export async function readJson<T>(name: string, fallback: T): Promise<T> {
   try {

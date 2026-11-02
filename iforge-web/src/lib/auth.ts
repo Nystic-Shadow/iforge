@@ -36,13 +36,20 @@ export function isAdminConfigured(): boolean {
   return Boolean(process.env.ADMIN_PASSWORD);
 }
 
-/** Set the admin session cookie after a successful login. */
-export async function createSession(): Promise<void> {
+/**
+ * Set the admin session cookie after a successful login. `secure` follows the
+ * request's protocol: browsers drop Secure cookies on plain-http sites (e.g.
+ * http://<server-ip>:3000), which would make every login bounce back.
+ */
+export async function createSession(request: Request): Promise<void> {
   const token = sign("admin");
+  const proto =
+    request.headers.get("x-forwarded-proto")?.split(",")[0].trim() ||
+    new URL(request.url).protocol.replace(":", "");
   const store = await cookies();
   store.set(COOKIE, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: proto === "https",
     sameSite: "lax",
     path: "/",
     maxAge: MAX_AGE,

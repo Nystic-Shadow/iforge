@@ -1,17 +1,20 @@
 import React from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { siteConfig } from "@/data/siteData";
+import { getContent } from "@/lib/content";
 import LegalPage from "@/components/LegalPage";
 
-export const metadata: Metadata = {
-  title: `Terms of Use | ${siteConfig.name}`,
-  description: `The terms that apply when you use the ${siteConfig.name} website.`,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { siteConfig } = await getContent();
+  return {
+    title: "Terms of Use",
+    description: `The terms that apply when you use the ${siteConfig.name} website.`,
+  };
+}
 
-const email = siteConfig.contactEmail;
-
-export default function TermsPage() {
+export default async function TermsPage() {
+  const { siteConfig } = await getContent();
+  const email = siteConfig.contactEmail;
   return (
     <LegalPage
       eyebrow="Legal"

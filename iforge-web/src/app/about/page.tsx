@@ -1,13 +1,12 @@
 import React from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { siteConfig } from "@/data/siteData";
 import { getContent } from "@/lib/content";
 import { Reveal, Stagger, RevealItem } from "@/components/ui/reveal";
 import { ArrowRight } from "reicon-react";
 
 export const metadata: Metadata = {
-  title: `About Us | ${siteConfig.name}`,
+  title: "About Us",
   description:
     "Learn about iForge Technologies — our engineering mission, the principles we work by, and the people building resilient systems for enterprises.",
 };

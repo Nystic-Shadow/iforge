@@ -4,11 +4,10 @@ import Link from "next/link";
 import GithubSkyline from "@/components/community/GithubSkyline";
 import { Reveal, Stagger, RevealItem } from "@/components/ui/reveal";
 import { ArrowRight } from "reicon-react";
-import { siteConfig } from "@/data/siteData";
 import { getContent } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: `Builders Community | ${siteConfig.name}`,
+  title: "Builders Community",
   description:
     "Where engineers, architects, and creators ship cutting-edge technology and share production architectures.",
 };

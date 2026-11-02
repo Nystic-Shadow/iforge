@@ -19,6 +19,6 @@ export async function POST(request: Request) {
     return Response.json({ ok: false, error: "Incorrect password." }, { status: 401 });
   }
 
-  await createSession();
+  await createSession(request);
   return Response.json({ ok: true });
 }

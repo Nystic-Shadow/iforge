@@ -3,3 +3,8 @@ node_modules
 .git
 .gitignore
 *.log
+# Secrets come from the environment at run time (docker-compose env_file),
+# never baked into the image. Local admin data stays out too.
+.env*
+.data
+public/uploads
