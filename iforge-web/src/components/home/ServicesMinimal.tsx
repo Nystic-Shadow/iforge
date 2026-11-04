@@ -6,7 +6,7 @@ import { ArrowUpRight } from "reicon-react";
 import { servicesData, type ServiceItem } from "@/data/siteData";
 import { Reveal, Stagger, RevealItem } from "@/components/ui/reveal";
 
-const COUNT_WORDS = ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
+const COUNT_WORDS: Record<number, string> = ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
 
 export default function ServicesMinimal({ services = servicesData }: { services?: ServiceItem[] }) {
   return (
@@ -23,7 +23,7 @@ export default function ServicesMinimal({ services = servicesData }: { services?
             <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
               {COUNT_WORDS[services.length] ?? services.length} core enterprise practice groups
               delivering full-lifecycle cloud architecture, machine-learning systems,
-              cybersecurity, application engineering, and digital marketing.
+              cybersecurity, and application engineering.
             </p>
           </div>
         </Reveal>

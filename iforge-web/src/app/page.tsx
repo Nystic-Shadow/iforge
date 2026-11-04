@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `${siteConfig.name} | Enterprise IT Services, Cloud Architecture & AI Consulting`,
     description:
-      "Enterprise IT services and consulting: cloud architecture on AWS and Google Cloud, cybersecurity, AI & ML advisory, digital marketing, and custom application engineering.",
+      "Enterprise IT services and consulting: cloud architecture on AWS and Google Cloud, cybersecurity, AI & ML advisory, and custom application engineering.",
   };
 }
 

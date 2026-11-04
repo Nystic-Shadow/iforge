@@ -355,67 +355,6 @@ export const servicesData: ServiceItem[] = [
         answer: "Yes, 100% of the source code, design systems, architectural schemas, repositories, and deployment configurations are transferred directly to your organization upon project delivery."
       }
     ]
-  },
-  {
-    id: "digital-marketing",
-    slug: "digital-marketing",
-    title: "Digital Marketing",
-    subtitle: "Launch, grow, and reinvent your brand with targeted, data-driven campaigns",
-    shortDesc: "Technical SEO, performance marketing, conversion rate optimization, and full-funnel analytics.",
-    longDesc: "iForge Digital Marketing helps brands get found, win attention, and turn visitors into qualified leads. We combine technical SEO, data-driven paid campaigns, and conversion-focused landing pages with transparent analytics, so every channel is measured against the pipeline and revenue it brings in.",
-    iconName: "TrendingUp",
-    features: [
-      "Search Engine Optimization (Technical, Content & On-Page)",
-      "Performance Marketing (Google Ads, Meta & LinkedIn Campaigns)",
-      "Content Strategy & Copywriting",
-      "Conversion Rate Optimization (CRO & A/B Testing)",
-      "Full-Funnel Analytics, Attribution & Growth Tracking"
-    ],
-    technologies: ["Google Analytics 4", "Search Console", "Google Tag Manager", "Looker Studio", "Semrush", "Ahrefs", "Meta Ads", "LinkedIn Campaign Manager"],
-    deliverables: [
-      "Technical SEO audit with a prioritized action plan",
-      "Paid acquisition campaigns with tracked conversions",
-      "Conversion-optimized landing page templates",
-      "Looker Studio dashboard for spend, leads, and return"
-    ],
-    metrics: [],
-    offerings: [
-      {
-        title: "Organic Search & Technical SEO",
-        description: "Keyword research, technical site health, and authority-building content that earns sustainable organic traffic.",
-        points: ["Site speed & indexation fixes", "Schema structured data markup", "Search-intent topic clusters"]
-      },
-      {
-        title: "Performance Marketing",
-        description: "Search and social ad campaigns managed against customer acquisition cost (CAC) and customer lifetime value.",
-        points: ["Audience segmentation & lookalikes", "Ad creative iteration & testing", "Bid strategy tuning"]
-      },
-      {
-        title: "Conversion Rate Optimization (CRO)",
-        description: "User-journey analysis, heatmaps, and structured testing to turn more of your existing traffic into qualified leads.",
-        points: ["Heatmap & scroll-depth analysis", "Form and landing page redesigns", "A/B and multivariate testing"]
-      }
-    ],
-    benefits: [
-      "A steady pipeline of qualified, high-intent inbound leads",
-      "Measurable return on ad spend with transparent attribution",
-      "Organic search traffic that keeps working beyond ad budgets",
-      "Consistent messaging across search, social, and email"
-    ],
-    faqs: [
-      {
-        question: "How long does it take to see results from SEO?",
-        answer: "Technical fixes usually improve indexation within a few weeks, while meaningful ranking and inbound lead growth typically builds over three to six months."
-      },
-      {
-        question: "Do you handle both B2B and B2C campaigns?",
-        answer: "Yes. Strategies are tailored to each business, from B2B lead generation on LinkedIn and Google Search to high-volume consumer campaigns."
-      },
-      {
-        question: "How do we track what our marketing spend returns?",
-        answer: "We set up conversion tracking in Google Analytics 4 and Tag Manager and report spend, leads, and cost per lead in a shared Looker Studio dashboard."
-      }
-    ]
   }
 ];
 
