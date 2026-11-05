@@ -16,7 +16,6 @@ const nextConfig: NextConfig = {
       { source: "/data-ai", destination: "/services/data-ai" },
       { source: "/cybersecurity-services", destination: "/services/cybersecurity-services" },
       { source: "/web-development", destination: "/services/web-development" },
-      { source: "/digital-marketing", destination: "/services/digital-marketing" },
       { source: "/staffing-solutions", destination: "/services/staffing-solutions" },
     ];
   },

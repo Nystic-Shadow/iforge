@@ -39,8 +39,6 @@ export async function generateMetadata(): Promise<Metadata> {
       "AI & ML Consulting",
       "Application Development",
       "Enterprise Dashboards",
-      "Digital Marketing",
-      "SEO Services",
       "Custom Web Applications",
       "Cloud Migration"
     ],
