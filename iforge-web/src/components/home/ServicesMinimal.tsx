@@ -9,6 +9,10 @@ import { Reveal, Stagger, RevealItem } from "@/components/ui/reveal";
 const COUNT_WORDS: Record<number, string> = ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
 
 export default function ServicesMinimal({ services = servicesData }: { services?: ServiceItem[] }) {
+  const validServices = (services || []).filter(
+    (s) => s && s.title && s.title.trim().length > 0 && s.slug && s.slug !== "digital-marketing"
+  );
+
   return (
     <section id="services" className="section border-b border-hairline">
       <div className="container-page">
@@ -21,7 +25,7 @@ export default function ServicesMinimal({ services = servicesData }: { services?
               </h2>
             </div>
             <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-              {COUNT_WORDS[services.length] ?? services.length} core enterprise practice groups
+              {COUNT_WORDS[validServices.length] ?? validServices.length} core enterprise practice groups
               delivering full-lifecycle cloud architecture, machine-learning systems,
               cybersecurity, and application engineering.
             </p>
@@ -30,7 +34,7 @@ export default function ServicesMinimal({ services = servicesData }: { services?
 
         {/* Numbered list of practices — hairline rows, hover slide */}
         <Stagger className="mt-14 border-t border-hairline">
-          {services.map((s, i) => (
+          {validServices.map((s, i) => (
             <RevealItem key={s.id}>
               <Link
                 href={`/services/${s.slug}`}
