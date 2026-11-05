@@ -29,7 +29,16 @@ export function SiteContentProvider({
   value: SiteContentValue;
   children: React.ReactNode;
 }) {
-  return <SiteContentContext.Provider value={value}>{children}</SiteContentContext.Provider>;
+  const filteredValue = React.useMemo(
+    () => ({
+      ...value,
+      services: (value.services || []).filter(
+        (s) => s && s.title?.trim() && s.slug && s.slug !== "digital-marketing"
+      ),
+    }),
+    [value]
+  );
+  return <SiteContentContext.Provider value={filteredValue}>{children}</SiteContentContext.Provider>;
 }
 
 export function useSiteContent(): SiteContentValue {

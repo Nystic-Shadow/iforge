@@ -11,7 +11,7 @@ export default function HomeQuoteTeaser({
 }: {
   services?: ServiceItem[];
 }) {
-  const servicesList = services;
+  const servicesList = (services || []).filter((s) => s && s.title?.trim() && s.slug && s.slug !== "digital-marketing");
   const [selectedService, setSelectedService] = useState("it-cloud");
   const [timeline, setTimeline] = useState("medium");
 

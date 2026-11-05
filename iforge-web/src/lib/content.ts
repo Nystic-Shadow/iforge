@@ -211,6 +211,9 @@ function mergeServices(stored: Partial<SiteContent>): ServiceItem[] {
   const storedSlugs = new Set(stored.services.map((s) => s.slug));
   const services: ServiceItem[] = [];
   for (const s of stored.services) {
+    if (s.slug === "digital-marketing" || !s.title?.trim() || !s.slug?.trim()) {
+      continue;
+    }
     const into = MERGED_SERVICES[s.slug];
     if (into && !known.has(into)) {
       const merged = defaultContent.services.find((d) => d.slug === into);
@@ -228,7 +231,7 @@ function mergeServices(stored: Partial<SiteContent>): ServiceItem[] {
   }
   const have = new Set(services.map((s) => s.slug));
   const added = defaultContent.services.filter((s) => !known.has(s.slug) && !have.has(s.slug));
-  return [...services, ...added];
+  return [...services, ...added].filter((s) => s && s.slug && s.title?.trim() && s.slug !== "digital-marketing");
 }
 
 /** Deep-merge a stored partial over the defaults so missing fields never break a page. */
